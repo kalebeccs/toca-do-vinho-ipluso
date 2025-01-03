@@ -1,12 +1,12 @@
 # 🍷 Toca do Vinho
 
-Uma aplicação web para gerenciar o estoque e as vendas de uma adega.
+A web application to manage the inventory and sales of a wine cellar.
 
-## 🚧 Status do Projeto
+## 🚧 Project Status
 
-Este projeto está em construção.
+This project is under construction.
 
-## 🛠️ Tecnologias Utilizadas
+## 🛠️ Technologies Used
 
 - Python
 - SQLite3
