@@ -66,9 +66,9 @@ def fetch_query(query, params=None, fetch_one=False):
                 cursor.execute(query)
             results=  cursor.fetchone() if fetch_one else cursor.fetchall()
             if fetch_one and results:
-                return dict(results)  # Retorna como um dicionário para fetch_one
+                return dict(results)
             elif results:
-                return [dict(row) for row in results]  # Retorna uma lista de dicionários para fetch_all
+                return [dict(row) for row in results]
             else:
                 return None
         except sqlite3.Error as e:
