@@ -32,7 +32,7 @@ TABLES = {
         );
     """,
     "Stock": """
-        CREATE TABLE IF NOT EXISTS Stock(
+        CREATE TABLE IF NOT EXISTS Stock (
             pk_stock INTEGER PRIMARY KEY,
             fk_wine INTEGER NOT NULL,
             movement_date DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -40,7 +40,7 @@ TABLES = {
             quantity INTEGER NOT NULL,
             fk_user INTEGER,
             reason TEXT,
-            FOREIGN KEY(fk_wine) REFERENCES (pk_wine),
+            FOREIGN KEY(fk_wine) REFERENCES Wine(pk_wine),
             FOREIGN KEY(fk_user) REFERENCES Users(pk_user)
         );
     """,
