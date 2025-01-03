@@ -6,11 +6,11 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 class DatabaseManager:
     """
-    Gerencia a conexão com o banco de dados utilizando o contexto do Python.
+    Manages the database connection using Python's context management.
 
-    Métodos:
-        __enter__: Abre a conexão com o banco de dados.
-        __exit__: Fecha a conexão ao sair do contexto.
+    Methods:
+        __enter__: Opens the database connection.
+        __exit__: Closes the connection when exiting the context.
     """
     def __init__(self, db_path='db/tocadovinho.db'):
         self.db_path = db_path
@@ -21,7 +21,7 @@ class DatabaseManager:
             self.conn.row_factory = sqlite3.Row
             return self.conn
         except sqlite3.Error as e:
-            logging.error(f"Erro ao conectar ao banco de dados: {e}")
+            logging.error(f"Error connecting to the database: {e}")
             raise
 
     def __exit__(self, exc_type, exc_value, traceback):
@@ -30,10 +30,10 @@ class DatabaseManager:
             
 def execute_query(query, params=None, trim=False):
     """
-    Executa uma query no banco de dados.
-    :param query: string com a query a ser executada.
-    :param params: tupla com os parâmetros da query.
-    :return: cursor com os resultados da query.
+    Executes a query on the database.
+    :param query: string with the query to be executed.
+    :param params: tuple with the query parameters.
+    :return: cursor with the query results.
     """
     with DatabaseManager() as conn:
         try:
@@ -43,19 +43,19 @@ def execute_query(query, params=None, trim=False):
             else:
                 cursor.execute(query)
             conn.commit()
-            logging.info(f"Query executada: {query}")
+            logging.info(f"Query executed: {query}")
             return cursor
         except sqlite3.Error as e:
-            logging.error(f"Erro ao executar query: {e}")
+            logging.error(f"Error executing query: {e}")
             raise
 
 def fetch_query(query, params=None, fetch_one=False):
     """
-    Executa uma query no banco de dados e retorna os resultados.
-    :param query: string com a query a ser executada.
-    :param params: tupla com os parâmetros da query.
-    :param fetch_one: booleano para retornar apenas um resultado.
-    :return: lista com os resultados da query.
+    Executes a query on the database and returns the results.
+    :param query: string with the query to be executed.
+    :param params: tuple with the query parameters.
+    :param fetch_one: boolean to return only one result.
+    :return: list with the query results.
     """
     with DatabaseManager() as conn:
         try:
@@ -64,7 +64,7 @@ def fetch_query(query, params=None, fetch_one=False):
                 cursor.execute(query, params)
             else:
                 cursor.execute(query)
-            results=  cursor.fetchone() if fetch_one else cursor.fetchall()
+            results = cursor.fetchone() if fetch_one else cursor.fetchall()
             if fetch_one and results:
                 return dict(results)
             elif results:
@@ -72,22 +72,22 @@ def fetch_query(query, params=None, fetch_one=False):
             else:
                 return None
         except sqlite3.Error as e:
-            logging.error(f"Erro ao buscar dados: {e}")
+            logging.error(f"Error fetching data: {e}")
             return None
 
 def fetch_all_from_table(table_name):
     """
-    Retorna todos os registros de uma tabela específica.
-    :param table_name: Nome da tabela.
-    :return: Lista de dicionários contendo os registros da tabela.
+    Returns all records from a specific table.
+    :param table_name: Name of the table.
+    :return: List of dictionaries containing the table records.
     """
     if table_name not in TABLES.keys():
-        raise ValueError(f"Tabela '{table_name}' não permitida. Tabelas válidas: {', '.join(TABLES.keys())}")
+        raise ValueError(f"Table '{table_name}' not allowed. Valid tables: {', '.join(TABLES.keys())}")
     return fetch_query(f"SELECT * FROM {table_name}")
 
 def initialize_db():
     """
-    Inicializa o banco de dados, criando as tabelas necessárias caso ainda não existam.
+    Initializes the database, creating the necessary tables if they do not exist.
     """
     with DatabaseManager() as conn:
         try:
@@ -95,10 +95,10 @@ def initialize_db():
             conn.execute("BEGIN")
             for table_name, create_statement in TABLES.items():
                 cursor.execute(create_statement)
-                logging.info(f"Tabela '{table_name}' verificada/criada com sucesso.")
+                logging.info(f"Table '{table_name}' checked/created successfully.")
             conn.commit()
-            logging.info("Banco de dados inicializado com sucesso!")
+            logging.info("Database initialized successfully!")
         except sqlite3.Error as e:
             conn.rollback() 
-            logging.error(f"Erro ao inicializar banco de dados: {e}")
+            logging.error(f"Error initializing database: {e}")
             raise
